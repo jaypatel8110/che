@@ -52,6 +52,7 @@ import org.eclipse.che.ide.api.parts.PartPresenter;
 import org.eclipse.che.ide.api.parts.PartStackView.TabItem;
 import org.eclipse.che.ide.api.parts.PropertyListener;
 import org.eclipse.che.ide.api.parts.base.MaximizePartEvent;
+import org.eclipse.che.ide.api.parts.partstack.properties.PartStackPropertiesFactory;
 import org.eclipse.che.ide.api.resources.ResourceChangedEvent;
 import org.eclipse.che.ide.api.resources.ResourceChangedEvent.ResourceChangedHandler;
 import org.eclipse.che.ide.api.resources.ResourceDelta;
@@ -125,8 +126,17 @@ public class EditorPartStackPresenter extends PartStackPresenter
       ClosePaneAction closePaneAction,
       CloseAllTabsPaneAction closeAllTabsPaneAction,
       EditorAgent editorAgent,
+      PartStackPropertiesFactory partStackPropertiesFactory,
       AddEditorTabMenuFactory addEditorTabMenuFactory) {
-    super(eventBus, partMenu, partStackEventHandler, tabItemFactory, partsComparator, view, null);
+    super(
+        eventBus,
+        partMenu,
+        partStackPropertiesFactory,
+        partStackEventHandler,
+        tabItemFactory,
+        partsComparator,
+        view,
+        null);
     this.appContext = appContext;
     this.editorPaneMenuItemFactory = editorPaneMenuItemFactory;
     this.eventBus = eventBus;

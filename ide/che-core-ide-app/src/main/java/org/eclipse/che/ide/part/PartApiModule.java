@@ -27,6 +27,9 @@ import org.eclipse.che.ide.api.parts.PartStackUIResources;
 import org.eclipse.che.ide.api.parts.PartStackView;
 import org.eclipse.che.ide.api.parts.Perspective;
 import org.eclipse.che.ide.api.parts.PerspectiveView;
+import org.eclipse.che.ide.api.parts.partstack.properties.PartStackProperties;
+import org.eclipse.che.ide.api.parts.partstack.properties.PartStackPropertiesFactory;
+import org.eclipse.che.ide.api.parts.partstack.properties.PartStackPropertiesImpl;
 import org.eclipse.che.ide.part.editor.EditorPartStackPresenter;
 import org.eclipse.che.ide.part.editor.multipart.EditorMultiPartStackPresenter;
 import org.eclipse.che.ide.part.editor.multipart.SplitEditorPartView;
@@ -80,6 +83,11 @@ public class PartApiModule extends AbstractGinModule {
 
     // project explorer
     bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
+
+    install(
+        new GinFactoryModuleBuilder()
+            .implement(PartStackProperties.class, PartStackPropertiesImpl.class)
+            .build(PartStackPropertiesFactory.class));
   }
 
   @Provides

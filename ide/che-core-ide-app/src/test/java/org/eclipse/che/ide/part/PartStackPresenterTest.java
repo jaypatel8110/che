@@ -30,6 +30,7 @@ import org.eclipse.che.ide.api.parts.PartPresenter;
 import org.eclipse.che.ide.api.parts.PartStackView;
 import org.eclipse.che.ide.api.parts.PropertyListener;
 import org.eclipse.che.ide.api.parts.base.BasePresenter;
+import org.eclipse.che.ide.api.parts.partstack.properties.PartStackPropertiesFactory;
 import org.eclipse.che.ide.menu.PartMenu;
 import org.eclipse.che.ide.part.PartStackPresenter.PartStackEventHandler;
 import org.eclipse.che.ide.part.widgets.TabItemFactory;
@@ -61,6 +62,7 @@ public class PartStackPresenterTest {
   @Mock private TabItemFactory tabItemFactory;
   @Mock private PartStackView view;
   @Mock private PropertyListener propertyListener;
+  @Mock private PartStackPropertiesFactory propertiesFactory;
 
   // additional mocks
   @Mock private AcceptsOneWidget container;
@@ -93,6 +95,7 @@ public class PartStackPresenterTest {
         new PartStackPresenter(
             eventBus,
             partMenu,
+            propertiesFactory,
             partStackHandler,
             tabItemFactory,
             partsComparator,

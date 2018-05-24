@@ -14,6 +14,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.eclipse.che.ide.api.constraints.Constraints;
 import org.eclipse.che.ide.api.mvp.Presenter;
+import org.eclipse.che.ide.api.parts.partstack.properties.PartStackProperties;
 
 /**
  * Part Stack is tabbed layout element, containing Parts.
@@ -144,6 +145,9 @@ public interface PartStack extends Presenter {
    * @param delegate action delegate
    */
   void setDelegate(ActionDelegate delegate);
+
+  /** Returns related to Part Stack properties */
+  PartStackProperties getProperties();
 
   interface ActionDelegate {
 

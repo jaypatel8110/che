@@ -10,6 +10,8 @@
  */
 package org.eclipse.che.ide.part;
 
+import static org.eclipse.che.ide.api.parts.partstack.properties.PartStackProperties.HIDDEN_BY_USER;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -34,6 +36,8 @@ import org.eclipse.che.ide.api.parts.PartStackView;
 import org.eclipse.che.ide.api.parts.PartStackView.TabItem;
 import org.eclipse.che.ide.api.parts.PropertyListener;
 import org.eclipse.che.ide.api.parts.base.BasePresenter;
+import org.eclipse.che.ide.api.parts.partstack.properties.PartStackProperties;
+import org.eclipse.che.ide.api.parts.partstack.properties.PartStackPropertiesFactory;
 import org.eclipse.che.ide.menu.PartMenu;
 import org.eclipse.che.ide.part.widgets.TabItemFactory;
 import org.eclipse.che.ide.part.widgets.partbutton.PartButton;
@@ -64,6 +68,7 @@ public class PartStackPresenter
   private final PartStackEventHandler partStackHandler;
   private final EventBus eventBus;
   private final PartMenu partMenu;
+  private final PartStackProperties properties;
 
   protected final Map<TabItem, PartPresenter> parts;
   protected final TabItemFactory tabItemFactory;
@@ -86,6 +91,7 @@ public class PartStackPresenter
   public PartStackPresenter(
       final EventBus eventBus,
       final PartMenu partMenu,
+      PartStackPropertiesFactory propertiesFactory,
       PartStackEventHandler partStackEventHandler,
       TabItemFactory tabItemFactory,
       PartsComparator partsComparator,
@@ -103,6 +109,7 @@ public class PartStackPresenter
 
     this.parts = new HashMap<>();
     this.constraints = new LinkedHashMap<>();
+    this.properties = propertiesFactory.create(this);
 
     this.propertyListener =
         new PropertyListener() {
@@ -126,6 +133,11 @@ public class PartStackPresenter
   @Override
   public void setDelegate(ActionDelegate delegate) {
     this.delegate = delegate;
+  }
+
+  @Override
+  public PartStackProperties getProperties() {
+    return properties;
   }
 
   private void updatePartTab(@NotNull PartPresenter part) {
@@ -238,15 +250,7 @@ public class PartStackPresenter
       workBenchPartController.setHidden(false);
     }
 
-    // Notify the part stack state has been changed.
-    Scheduler.get()
-        .scheduleDeferred(
-            new Scheduler.ScheduledCommand() {
-              @Override
-              public void execute() {
-                eventBus.fireEvent(new PartStackStateChangedEvent(PartStackPresenter.this));
-              }
-            });
+    notifyPartStackStateChanged();
 
     selectActiveTab(tab);
   }
@@ -321,6 +325,7 @@ public class PartStackPresenter
 
   @Override
   public void onHide() {
+    properties.addProperty(HIDDEN_BY_USER, "true");
     hide();
   }
 
@@ -350,15 +355,7 @@ public class PartStackPresenter
       delegate.onMaximize(this);
     }
 
-    // Notify the part stack state has been changed.
-    Scheduler.get()
-        .scheduleDeferred(
-            new Scheduler.ScheduledCommand() {
-              @Override
-              public void execute() {
-                eventBus.fireEvent(new PartStackStateChangedEvent(PartStackPresenter.this));
-              }
-            });
+    notifyPartStackStateChanged();
   }
 
   @Override
@@ -388,15 +385,7 @@ public class PartStackPresenter
     activeTab = null;
     activePart = null;
 
-    // Notify the part stack state has been changed.
-    Scheduler.get()
-        .scheduleDeferred(
-            new Scheduler.ScheduledCommand() {
-              @Override
-              public void execute() {
-                eventBus.fireEvent(new PartStackStateChangedEvent(PartStackPresenter.this));
-              }
-            });
+    notifyPartStackStateChanged();
   }
 
   @Override
@@ -435,15 +424,7 @@ public class PartStackPresenter
     activeTab = null;
     activePart = null;
 
-    // Notify the part stack state has been changed.
-    Scheduler.get()
-        .scheduleDeferred(
-            new Scheduler.ScheduledCommand() {
-              @Override
-              public void execute() {
-                eventBus.fireEvent(new PartStackStateChangedEvent(PartStackPresenter.this));
-              }
-            });
+    notifyPartStackStateChanged();
   }
 
   @Override
@@ -459,15 +440,7 @@ public class PartStackPresenter
       delegate.onRestore(this);
     }
 
-    // Notify the part stack state has been changed.
-    Scheduler.get()
-        .scheduleDeferred(
-            new Scheduler.ScheduledCommand() {
-              @Override
-              public void execute() {
-                eventBus.fireEvent(new PartStackStateChangedEvent(PartStackPresenter.this));
-              }
-            });
+    notifyPartStackStateChanged();
 
     if (activePart != null) {
       activePart.onOpen();
@@ -519,15 +492,7 @@ public class PartStackPresenter
       activeTab.select();
     }
 
-    // Notify the part stack state has been changed.
-    Scheduler.get()
-        .scheduleDeferred(
-            new Scheduler.ScheduledCommand() {
-              @Override
-              public void execute() {
-                eventBus.fireEvent(new PartStackStateChangedEvent(PartStackPresenter.this));
-              }
-            });
+    notifyPartStackStateChanged();
   }
 
   /** {@inheritDoc} */
@@ -555,6 +520,13 @@ public class PartStackPresenter
   @Override
   public void onPartStackMenu(int mouseX, int mouseY) {
     partMenu.show(mouseX, mouseY);
+  }
+
+  /** Notify the Part Stack state has been changed. */
+  private void notifyPartStackStateChanged() {
+    Scheduler.get()
+        .scheduleDeferred(
+            () -> eventBus.fireEvent(new PartStackStateChangedEvent(PartStackPresenter.this)));
   }
 
   /** Handles PartStack actions */

@@ -30,6 +30,8 @@ import org.eclipse.che.ide.api.parts.EditorMultiPartStackState;
 import org.eclipse.che.ide.api.parts.EditorPartStack;
 import org.eclipse.che.ide.api.parts.EditorTab;
 import org.eclipse.che.ide.api.parts.PartPresenter;
+import org.eclipse.che.ide.api.parts.partstack.properties.PartStackProperties;
+import org.eclipse.che.ide.api.parts.partstack.properties.PartStackPropertiesFactory;
 import org.eclipse.che.ide.api.workspace.event.WorkspaceRunningEvent;
 import org.eclipse.che.ide.api.workspace.event.WorkspaceStartingEvent;
 import org.eclipse.che.ide.api.workspace.event.WorkspaceStoppedEvent;
@@ -46,6 +48,7 @@ public class EditorMultiPartStackPresenter
   private final Provider<EditorPartStack> editorPartStackFactory;
   private final EditorMultiPartStackView view;
   private final LinkedList<EditorPartStack> partStackPresenters;
+  private final PartStackProperties partStackProperties;
   private PartPresenter activeEditor;
   private EditorPartStack activeEditorPartStack;
 
@@ -56,10 +59,12 @@ public class EditorMultiPartStackPresenter
       EventBus eventBus,
       EditorMultiPartStackView view,
       Provider<EditorPartStack> editorPartStackFactory,
+      PartStackPropertiesFactory partStackPropertiesFactory,
       AppContext appContext) {
     this.view = view;
     this.editorPartStackFactory = editorPartStackFactory;
     this.partStackPresenters = new LinkedList<>();
+    this.partStackProperties = partStackPropertiesFactory.create(this);
 
     eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
 
@@ -75,6 +80,11 @@ public class EditorMultiPartStackPresenter
 
   @Override
   public void setDelegate(ActionDelegate delegate) {}
+
+  @Override
+  public PartStackProperties getProperties() {
+    return partStackProperties;
+  }
 
   @Override
   public void go(AcceptsOneWidget container) {

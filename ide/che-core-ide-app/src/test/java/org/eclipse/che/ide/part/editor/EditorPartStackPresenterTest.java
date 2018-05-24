@@ -52,6 +52,7 @@ import org.eclipse.che.ide.api.parts.EditorTab;
 import org.eclipse.che.ide.api.parts.PartPresenter;
 import org.eclipse.che.ide.api.parts.PartStackView.TabItem;
 import org.eclipse.che.ide.api.parts.PropertyListener;
+import org.eclipse.che.ide.api.parts.partstack.properties.PartStackPropertiesFactory;
 import org.eclipse.che.ide.api.resources.Container;
 import org.eclipse.che.ide.api.resources.VirtualFile;
 import org.eclipse.che.ide.menu.PartMenu;
@@ -99,6 +100,7 @@ public class EditorPartStackPresenterTest {
   @Mock private EditorPaneMenuItemFactory editorPaneMenuItemFactory;
   @Mock private EditorAgent editorAgent;
   @Mock private AddEditorTabMenuFactory addEditorTabMenuFactory;
+  @Mock private PartStackPropertiesFactory propertiesFactory;
 
   // additional mocks
   @Mock private SplitHorizontallyAction splitHorizontallyAction;
@@ -185,6 +187,7 @@ public class EditorPartStackPresenterTest {
             closePaneAction,
             closeAllTabsPaneAction,
             editorAgent,
+            propertiesFactory,
             addEditorTabMenuFactory);
 
     when(tabItemFactory.createEditorPartButton(partPresenter1, presenter)).thenReturn(editorTab1);

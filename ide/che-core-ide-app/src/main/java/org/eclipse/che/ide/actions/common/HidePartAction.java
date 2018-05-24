@@ -10,6 +10,8 @@
  */
 package org.eclipse.che.ide.actions.common;
 
+import static org.eclipse.che.ide.api.parts.partstack.properties.PartStackProperties.HIDDEN_BY_USER;
+
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import org.eclipse.che.ide.CoreLocalizationConstant;
@@ -50,6 +52,7 @@ public class HidePartAction extends BaseAction implements ActivePartChangedHandl
 
   @Override
   public void actionPerformed(ActionEvent e) {
+    activePartStack.getProperties().addProperty(HIDDEN_BY_USER, "true");
     activePartStack.hide();
   }
 

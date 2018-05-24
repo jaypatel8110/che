@@ -32,6 +32,7 @@ import org.eclipse.che.ide.api.editor.EditorPartPresenter;
 import org.eclipse.che.ide.api.parts.ActivePartChangedEvent;
 import org.eclipse.che.ide.api.parts.EditorPartStack;
 import org.eclipse.che.ide.api.parts.PartPresenter;
+import org.eclipse.che.ide.api.parts.partstack.properties.PartStackPropertiesFactory;
 import org.eclipse.che.ide.api.workspace.model.WorkspaceImpl;
 import org.eclipse.che.ide.part.editor.EditorPartStackPresenter;
 import org.junit.Before;
@@ -52,6 +53,7 @@ public class EditorMultiPartStackPresenterTest {
   @Mock private EventBus eventBus;
   @Mock private AppContext appContext;
   @Mock private WorkspaceImpl workspace;
+  @Mock private PartStackPropertiesFactory propertiesFactory;
 
   @Mock private Provider<EditorPartStack> editorPartStackProvider;
 
@@ -74,7 +76,8 @@ public class EditorMultiPartStackPresenterTest {
     when(appContext.getWorkspace().getStatus()).thenReturn(WorkspaceStatus.RUNNING);
 
     presenter =
-        new EditorMultiPartStackPresenter(eventBus, view, editorPartStackProvider, appContext);
+        new EditorMultiPartStackPresenter(
+            eventBus, view, editorPartStackProvider, propertiesFactory, appContext);
   }
 
   @Test
