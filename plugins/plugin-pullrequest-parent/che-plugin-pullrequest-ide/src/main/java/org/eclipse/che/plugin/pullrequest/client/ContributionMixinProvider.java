@@ -17,6 +17,7 @@ import static org.eclipse.che.api.core.model.workspace.WorkspaceStatus.RUNNING;
 import static org.eclipse.che.ide.api.constraints.Constraints.FIRST;
 import static org.eclipse.che.ide.api.parts.PartStack.State.HIDDEN;
 import static org.eclipse.che.ide.api.parts.PartStack.State.MINIMIZED;
+import static org.eclipse.che.ide.api.parts.PartStack.State.NORMAL;
 import static org.eclipse.che.ide.api.parts.PartStackType.TOOLING;
 import static org.eclipse.che.plugin.pullrequest.client.preference.ContributePreferencePresenter.ACTIVATE_BY_PROJECT_SELECTION;
 import static org.eclipse.che.plugin.pullrequest.shared.ContributionProjectTypeConstants.CONTRIBUTE_TO_BRANCH_VARIABLE_NAME;
@@ -276,7 +277,11 @@ public class ContributionMixinProvider {
 
   private boolean isActivationAllowed() {
     State toolingPartStackState = workspaceAgent.getPartStack(TOOLING).getPartStackState();
-    if (HIDDEN != toolingPartStackState && MINIMIZED != toolingPartStackState) {
+    if (MINIMIZED == toolingPartStackState) {
+      return false;
+    }
+
+    if (NORMAL == toolingPartStackState) {
       return true;
     }
 
