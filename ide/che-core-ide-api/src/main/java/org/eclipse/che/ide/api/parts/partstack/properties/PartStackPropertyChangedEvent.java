@@ -15,18 +15,17 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.eclipse.che.ide.api.parts.PartStack;
 
 /**
- * Is fired when a Part Stack property is changed.
+ * Event is fired when a Part Stack property is changed.
  *
  * @author Roman Nikitenko
  */
 public class PartStackPropertyChangedEvent extends GwtEvent<PartStackPropertyChangedEvent.Handler> {
+  public static final Type<Handler> TYPE = new Type<Handler>();
 
   /** Implement to handle changing a Part Stack property. */
   public interface Handler extends EventHandler {
     void onPartStackPropertyChanged(PartStackPropertyChangedEvent event);
   }
-
-  public static final Type<Handler> TYPE = new Type<Handler>();
 
   private final PartStack partStack;
   private final String propertyId;
